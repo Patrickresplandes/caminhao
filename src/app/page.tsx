@@ -11,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const tokenFromCookies = Cookies.get('token');
+      const tokenFromCookies = Cookies.get('tokenCar');
       setToken(tokenFromCookies as string);
     }
   }, []);

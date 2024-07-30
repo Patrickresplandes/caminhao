@@ -5,16 +5,19 @@ import Head from 'next/head';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", senha: "" });
   const { signIn } = useContext(AuthContext);
+  const router = useRouter();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
       await signIn({ email: formData.email, senha: formData.senha });
       toast.success('Login successful!');
+      router.push('/'); // Redireciona para a página inicial após o login bem-sucedido
     } catch (error) {
       toast.error('Login failed. Please check your credentials and try again.');
     }
