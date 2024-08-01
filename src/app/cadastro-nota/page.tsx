@@ -1,40 +1,33 @@
 "use client"
 import React, { useState } from 'react';
-import MotoristaForm from '../../components/MotoristaForm';
-import MotoristaTable from '../../components/MotoristaTable';
-import { useMotoristas } from '../../hooks/useMotoristas';
-import { MotoristaFormData } from '../../models/Motorista';
+import NotaForm from '../../components/NotaForm';
+import NotaTable from '../../components/NotaTable';
+import { useNotas } from '../../hooks/useNotas';
+import { NotaFormData } from '../../models/Nota';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { addNota } from '@/services/notasServices';
 import Sidebar from '@/components/ui/SideBar';
-import { addMotorista, fetchMotoristaByCpf } from '@/services/motoristasServices';
 
-const CadastroMotorista: React.FC = () => {
-  const { motoristas, loading, error } = useMotoristas();
+const CadastroNota: React.FC = () => {
+  const { notas, loading, error } = useNotas();
   const [searchCpf, setSearchCpf] = useState<string>("");
-  const [searchedMotoristas, setSearchedMotoristas] = useState<MotoristaFormData[]>([]);
 
-  const handleSubmit = async (data: MotoristaFormData) => {
+  const handleSubmit = async (data: NotaFormData) => {
     try {
-      const result = await addMotorista(data);
+      const result = await addNota(data);
       if (result.exists) {
-        toast.error('CPF já cadastrado.');
+        toast.error('Nota já cadastrada.');
       } else {
-        toast.success('Motorista cadastrado com sucesso!');
+        toast.success('Nota cadastrada com sucesso!');
       }
     } catch (error) {
-      toast.error('Erro ao cadastrar motorista.');
+      toast.error('Erro ao cadastrar nota.');
     }
   };
 
   const handleSearch = async () => {
-    try {
-      const result = await fetchMotoristaByCpf(searchCpf);
-      setSearchedMotoristas(result);
-    } catch (error) {
-      toast.error('Erro ao buscar motorista.');
-    }
+    // Lógica de busca (pode ser adicionado conforme necessidade)
   };
 
   return (
@@ -42,12 +35,12 @@ const CadastroMotorista: React.FC = () => {
       <Sidebar />
       <section className="bg-slate-100 text-gray-900 flex flex-col flex-1">
         <div className="h-[50px] bg-white p-2 shadow-md">
-          <h1 className="text-2xl font-bold text-center">Cadastro de Motorista</h1>
+          <h1 className="text-2xl font-bold text-center">Cadastro de Nota</h1>
         </div>
         <div className="flex-1 overflow-auto p-4">
-          <MotoristaForm onSubmit={handleSubmit} />
+          <NotaForm onSubmit={handleSubmit} />
           <div className="mt-8">
-            <h2 className="text-xl font-bold mb-4 text-center">Buscar Motorista por CPF</h2>
+            <h2 className="text-xl font-bold mb-4 text-center">Buscar Nota por CPF</h2>
             <div className="flex mb-4">
               <input
                 type="text"
@@ -65,7 +58,7 @@ const CadastroMotorista: React.FC = () => {
             </div>
           </div>
           <div className="mt-8">
-            {loading ? <p>Loading...</p> : error ? <p>{error}</p> : <MotoristaTable motoristas={searchedMotoristas.length > 0 ? searchedMotoristas : motoristas} />}
+            {loading ? <p>Loading...</p> : error ? <p>{error}</p> : <NotaTable notas={notas} />}
           </div>
         </div>
       </section>
@@ -74,4 +67,4 @@ const CadastroMotorista: React.FC = () => {
   );
 };
 
-export default CadastroMotorista;
+export default CadastroNota;

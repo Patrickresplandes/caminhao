@@ -29,6 +29,7 @@ const Sidebar = () => {
         <nav className="flex flex-col mt-4">
           <Link href="/dashboard" className="p-4 hover:bg-gray-700">Dashboard</Link>
           <Link href="/cadastro-motorista" className="p-4 hover:bg-gray-700">Motoristas</Link>
+          <Link href="/manutencao" className="p-4 hover:bg-gray-700">Manutenção</Link>
           <Link href="/cadastro-nota" className="p-4 hover:bg-gray-700">Cadastro Nota</Link>
           <Link href="/visualizar-nota" className="p-4 hover:bg-gray-700">Visualizar Nota</Link>
         </nav>
