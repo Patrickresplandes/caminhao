@@ -1,9 +1,10 @@
+import { MotoristaFormData } from '@/models/Motorista';
 import { fetchMotoristas } from '@/services/motoristasServices';
 import { useEffect, useState } from 'react';
 
 
 export const useMotoristas = () => {
-  const [motoristas, setMotoristas] = useState<FormData[]>([]);
+  const [motoristas, setMotoristas] = useState<MotoristaFormData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

@@ -1,6 +1,7 @@
+"use client"
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { setToken } from "../actions";
+import Cookies from 'js-cookie';
 
 interface CallBackPageProps{
     searchParams: {
@@ -16,7 +17,7 @@ const { push } = useRouter()
 
 useEffect(() => {
     if(token){
-        setToken(token)
+        Cookies.set("tokenCar",token)
     }
     push("/")
 }, [])
