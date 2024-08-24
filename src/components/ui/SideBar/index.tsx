@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import { FiLogOut } from 'react-icons/fi'; 
+import { FiLogOut, FiHome, FiUser, FiTool, FiFileText } from 'react-icons/fi'; 
 
 const Sidebar = () => {
   const [hydrated, setHydrated] = useState(false);
@@ -27,11 +27,18 @@ const Sidebar = () => {
       <div>
         <div className="p-4 text-2xl font-semibold">Menu</div>
         <nav className="flex flex-col mt-4">
-          <Link href="/dashboard" className="p-4 hover:bg-gray-700">Dashboard</Link>
-          <Link href="/cadastro-motorista" className="p-4 hover:bg-gray-700">Motoristas</Link>
-          <Link href="/manutencao" className="p-4 hover:bg-gray-700">Manutenção</Link>
-          <Link href="/cadastro-nota" className="p-4 hover:bg-gray-700">Cadastro Nota</Link>
-          <Link href="/visualizar-nota" className="p-4 hover:bg-gray-700">Visualizar Nota</Link>
+          <Link href="/dashboard" className="p-4 flex items-center hover:bg-gray-700">
+            <FiHome className="mr-2" /> Dashboard
+          </Link>
+          <Link href="/cadastro-motorista" className="p-4 flex items-center hover:bg-gray-700">
+            <FiUser className="mr-2" /> Motoristas
+          </Link>
+          <Link href="/manutencao" className="p-4 flex items-center hover:bg-gray-700">
+            <FiTool className="mr-2" /> Manutenção
+          </Link>
+          <Link href="/cadastro-nota" className="p-4 flex items-center hover:bg-gray-700">
+            <FiFileText className="mr-2" /> Cadastro Nota
+          </Link>
         </nav>
       </div>
       <div className="p-4">

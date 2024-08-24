@@ -1,9 +1,9 @@
 import React from 'react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
-import { FormData } from '../models/Motorista';
+import { MotoristaFormData } from '../models/Motorista';
 
 interface MotoristaTableProps {
-  motoristas: FormData[];
+  motoristas: MotoristaFormData[];
 }
 
 const MotoristaTable: React.FC<MotoristaTableProps> = ({ motoristas }) => (
