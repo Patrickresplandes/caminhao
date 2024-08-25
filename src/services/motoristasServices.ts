@@ -4,7 +4,7 @@ export const fetchMotoristas = async () => {
   try {
     const response = await fetch('https://api-express-mongodb-1.onrender.com/motoristas');
     const result = await response.json();
-    return result.motoristas || [];
+    return result.docs || [];
   } catch (error) {
     throw new Error('Erro ao carregar motoristas.');
   }

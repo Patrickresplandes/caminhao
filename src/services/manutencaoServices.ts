@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ManutencaoFormData } from '@/models/Manutencao';
 
-const API_URL = 'http://localhost:3001/manutencao';
+const API_URL = 'https://api-express-mongodb-1.onrender.com/manutencao';
 
 export const addManutencao = async (data: ManutencaoFormData) => {
   try {

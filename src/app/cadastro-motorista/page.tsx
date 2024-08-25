@@ -8,7 +8,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Sidebar from '@/components/ui/SideBar';
-import { addMotorista, fetchMotoristaByCpf } from '@/services/motoristasServices';
+import { addMotorista, fetchMotoristaByCpf, fetchMotoristas } from '@/services/motoristasServices';
 
 const CadastroMotorista: React.FC = () => {
   const { motoristas, loading, error } = useMotoristas();
@@ -30,7 +30,8 @@ const CadastroMotorista: React.FC = () => {
 
   const handleSearch = async () => {
     try {
-      const result = await fetchMotoristaByCpf(searchCpf);
+      const result = await fetchMotoristas();
+      console.log(result)
       setSearchedMotoristas(result);
     } catch (error) {
       toast.error('Erro ao buscar motorista.');

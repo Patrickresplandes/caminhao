@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 import { MotoristaFormData } from '../models/Motorista';
 
 interface MotoristaTableProps {
@@ -8,7 +8,6 @@ interface MotoristaTableProps {
 
 const MotoristaTable: React.FC<MotoristaTableProps> = ({ motoristas }) => (
   <Table>
-    <TableCaption>Lista de Motoristas Cadastrados</TableCaption>
     <TableHeader>
       <TableRow>
         <TableHead>Nome</TableHead>

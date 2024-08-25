@@ -16,7 +16,6 @@ const CadastroManutencao: React.FC = () => {
     const fetchManutencoes = async () => {
       try {
         const result = await fetchAllManutencoes();
-        console.log('Fetched manutenções:', result.docs); 
         setManutencoes(result.docs); 
       } catch (error) {
         toast.error('Erro ao buscar manutenções.');
