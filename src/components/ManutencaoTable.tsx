@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 import { ManutencaoFormData } from '@/models/Manutencao';
 
 interface ManutencaoTableProps {

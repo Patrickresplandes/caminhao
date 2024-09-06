@@ -1,6 +1,5 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import Sidebar from '@/components/ui/SideBar';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ManutencaoFormData } from '@/models/Manutencao';
@@ -34,8 +33,8 @@ const CadastroManutencao: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <Sidebar />
+    <>
+       <title>Manutenção</title>
       <section className="bg-slate-100 text-gray-900 flex flex-col flex-1">
         <div className="h-[50px] bg-white p-2 shadow-md">
           <h1 className="text-2xl font-bold text-center">Cadastro de Manutenção</h1>
@@ -49,7 +48,7 @@ const CadastroManutencao: React.FC = () => {
         </div>
       </section>
       <ToastContainer />
-    </div>
+      </>
   );
 };
 

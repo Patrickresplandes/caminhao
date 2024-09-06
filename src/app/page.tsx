@@ -31,11 +31,8 @@ export default function Home() {
   }
 
   return (
-    <div className='flex h-screen'>
-      <Sidebar />
-      <div className='flex-1 bg-indigo-700 flex flex-col justify-center items-center text-white'>
+      <div className=' bg-indigo-700 flex w-full flex-col justify-center items-center text-white'>
         <p className='text-4xl font-extrabold mb-4'>Welcome to Home Page</p>
-      </div>
     </div>
   );
 }

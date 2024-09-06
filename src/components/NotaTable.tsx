@@ -1,6 +1,6 @@
 import React from 'react';
 import { NotaFormData } from '../models/Nota';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/Table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/Table';
 
 interface NotaTableProps {
   notas: NotaFormData[];
@@ -9,7 +9,6 @@ interface NotaTableProps {
 const NotaTable: React.FC<NotaTableProps> = ({ notas }) => {
   return (
     <Table>
-      <TableCaption>Lista de Notas Cadastradas</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead>Motorista</TableHead>
