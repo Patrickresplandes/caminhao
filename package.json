@@ -12,6 +12,7 @@
     "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
     "@hookform/resolvers": "^3.9.0",
     "axios": "^1.7.2",
+    "date-fns": "^4.1.0",
     "firebase": "^11.1.0",
     "joi": "^17.13.3",
     "js-cookie": "^3.0.5",

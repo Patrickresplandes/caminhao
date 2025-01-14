@@ -17,8 +17,8 @@ const ManutencaoForm: React.FC<ManutencaoFormProps> = ({ onSubmit }) => {
 
     const manutencaoData: ManutencaoFormData = {
       placa,
-      dataEntrada: new Date(dataEntrada),
-      dataSaida: new Date(dataSaida),
+      dataEntrada: dataEntrada,
+      dataSaida: dataSaida,
       observacao,
       valor,
     };
