@@ -11,6 +11,9 @@
   "dependencies": {
     "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
     "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-separator": "^1.1.1",
+    "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-tooltip": "^1.1.6",
     "axios": "^1.7.2",
     "date-fns": "^4.1.0",
     "firebase": "^11.1.0",
