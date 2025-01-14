@@ -1,21 +1,29 @@
-import axios from 'axios';
+import { db } from '@/fireBase';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { ManutencaoFormData } from '@/models/Manutencao';
 
-const API_URL = 'https://api-express-mongodb-1.onrender.com/manutencao';
+// Referência para a coleção 'manutencao' no Firestore
+const manutencaoCollection = collection(db, 'manutencao');
 
+// Adicionar uma nova manutenção
 export const addManutencao = async (data: ManutencaoFormData) => {
   try {
-    const response = await axios.post(API_URL, data);
-    return response.data;
+    const docRef = await addDoc(manutencaoCollection, data);
+    return { id: docRef.id, ...data };
   } catch (error: any) {
     throw new Error('Erro ao adicionar manutenção: ' + error.message);
   }
 };
 
+// Buscar todas as manutenções
 export const fetchAllManutencoes = async (): Promise<{ docs: ManutencaoFormData[] }> => {
   try {
-    const response = await axios.get(API_URL);
-    return response.data;
+    const querySnapshot = await getDocs(manutencaoCollection);
+    const docs: ManutencaoFormData[] = [];
+    querySnapshot.forEach((doc) => {
+      docs.push({ id: doc.id, ...doc.data() } as unknown as ManutencaoFormData);
+    });
+    return { docs };
   } catch (error: any) {
     throw new Error('Erro ao buscar manutenções: ' + error.message);
   }

@@ -1,9 +1,10 @@
 "use client";
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
-import { FiLogOut, FiHome, FiUser, FiTool, FiFileText } from 'react-icons/fi'; 
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { FiLogOut, FiHome, FiUser, FiTool, FiFileText } from "react-icons/fi";
+import { signOut } from "firebase/auth"; 
+import { auth } from "@/fireBase";
 
 const Sidebar = () => {
   const [hydrated, setHydrated] = useState(false);
@@ -14,12 +15,16 @@ const Sidebar = () => {
   }, []);
 
   if (!hydrated) {
-    return null; 
+    return null;
   }
 
-  const logout = () => {
-    Cookies.remove('tokenCar');
-    router.push('/login');
+  const logout = async () => {
+    try {
+      await signOut(auth); 
+      router.push("/login")
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error); 
+    }
   };
 
   return (
@@ -42,8 +47,8 @@ const Sidebar = () => {
         </nav>
       </div>
       <div className="p-4">
-        <button 
-          onClick={logout} 
+        <button
+          onClick={logout}
           className="flex items-center justify-center w-full p-2 bg-red-600 hover:bg-gray-600 text-white font-semibold text-sm rounded transition duration-200"
         >
           <FiLogOut className="mr-2" /> Logout

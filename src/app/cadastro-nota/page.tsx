@@ -13,8 +13,10 @@ const CadastroNota: React.FC = () => {
 
   const handleSubmit = async (data: NotaFormData) => {
     try {
+      console.log('Data being submitted:', data);
       const result = await addNota(data);
-      if (result.exists) {
+  
+      if ('exists' in result && result.exists) {
         toast.error('Nota já cadastrada.');
       } else {
         toast.success('Nota cadastrada com sucesso!');
@@ -23,6 +25,7 @@ const CadastroNota: React.FC = () => {
       toast.error('Erro ao cadastrar nota.');
     }
   };
+  
 
   return (
     <>

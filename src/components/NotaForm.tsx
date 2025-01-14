@@ -37,7 +37,7 @@ const NotaForm: React.FC<NotaFormProps> = ({ onSubmit }) => {
             render={({ field }) => (
               <input
                 {...field}
-                type="time"
+                type="date"
                 id="inicioJornada"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
               />
@@ -62,24 +62,6 @@ const NotaForm: React.FC<NotaFormProps> = ({ onSubmit }) => {
           />
           {errors.fazenda && <p className="text-red-600 text-sm">{errors.fazenda.message}</p>}
         </div>
-
-        <div className="text-left">
-          <label htmlFor="jornadaAcumulada" className="block text-sm font-medium">Jornada Acumulada</label>
-          <Controller
-            name="jornadaAcumulada"
-            control={control}
-            render={({ field }) => (
-              <input
-                {...field}
-                type="number"
-                id="jornadaAcumulada"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              />
-            )}
-          />
-          {errors.jornadaAcumulada && <p className="text-red-600 text-sm">{errors.jornadaAcumulada.message}</p>}
-        </div>
-
         <div className="text-left">
           <label htmlFor="fimJornada" className="block text-sm font-medium">Fim da Jornada</label>
           <Controller
@@ -88,7 +70,7 @@ const NotaForm: React.FC<NotaFormProps> = ({ onSubmit }) => {
             render={({ field }) => (
               <input
                 {...field}
-                type="time"
+                type="date"
                 id="fimJornada"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
               />

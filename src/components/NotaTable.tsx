@@ -1,10 +1,28 @@
 import React from 'react';
 import { NotaFormData } from '../models/Nota';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/Table';
+import { format } from 'date-fns';
 
 interface NotaTableProps {
   notas: NotaFormData[];
 }
+interface Timestamp {
+  seconds: number;
+  nanoseconds: number;
+}
+
+const formatarTimestamp = (data: string | Timestamp | null): string => {
+  if (!data) {
+    return 'Data inválida';
+  }
+
+  if (typeof data === 'object' && 'seconds' in data) {
+    const date = new Date(data.seconds * 1000); 
+    return format(date, 'dd/MM/yyyy');
+  }
+
+  return data; 
+};
 
 const NotaTable: React.FC<NotaTableProps> = ({ notas }) => {
   return (
@@ -26,10 +44,9 @@ const NotaTable: React.FC<NotaTableProps> = ({ notas }) => {
         {notas.map((nota, index) => (
           <TableRow key={index}>
             <TableCell>{nota.motorista}</TableCell>
-            <TableCell>{nota.inicioJornada}</TableCell>
+            <TableCell>{formatarTimestamp(nota.inicioJornada)}</TableCell>
             <TableCell>{nota.fazenda}</TableCell>
-            <TableCell>{nota.jornadaAcumulada}</TableCell>
-            <TableCell>{nota.fimJornada}</TableCell>
+            <TableCell>{formatarTimestamp(nota.fimJornada)}</TableCell>
             <TableCell>{nota.placa}</TableCell>
             <TableCell>{nota.kmInicio}</TableCell>
             <TableCell>{nota.kmFim}</TableCell>

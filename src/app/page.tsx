@@ -1,9 +1,7 @@
 "use client";
-
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import Sidebar from '@/components/ui/SideBar';
 
 export default function Home() {
   const router = useRouter();
@@ -11,7 +9,7 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const tokenFromCookies = Cookies.get('tokenCar');
+      const tokenFromCookies = Cookies.get('authToken');
       setToken(tokenFromCookies as string);
     }
   }, []);

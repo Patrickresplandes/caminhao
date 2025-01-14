@@ -1,7 +1,7 @@
 export interface ManutencaoFormData {
     placa: string;
-    dataEntrada: Date;
-    dataSaida: Date;
+    dataEntrada: string;
+    dataSaida: string;
     observacao: string;
     valor: number;
     docs?:ManutencaoFormData[];
