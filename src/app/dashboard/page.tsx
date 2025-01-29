@@ -5,21 +5,26 @@ import { collection, getDocs } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Chart } from "react-chartjs-2";
 import "chart.js/auto";
-import { FaCar, FaHourglassHalf, FaFileArchive, FaRoad, FaDollarSign, FaClock } from "react-icons/fa";  // Importando ícones
+import { FaCar, FaHourglassHalf, FaFileArchive, FaRoad, FaDollarSign, FaClock } from "react-icons/fa";
 
 interface Journey {
-  id: string;
-  driver: string;
-  date: string;
-  duration: number; // Duration in hours
-  distance: number; // Distance in km
-  farm: string; // Assuming farm represents the "fazendas"
+  id?: string;
+  titulo: string;
+  numero: any;
+  motorista: string;
+  inicioJornada: string;
+  fazenda: string;
+  fimJornada: string;
+  placa: string;
+  kmInicio: number;
+  kmFim: number;
+  abastecimento: number;
 }
 
 interface ControleOrData {
   id: string;
-  value: number; // Example: monetary value
-  duration: number; // Example: duration in hours
+  valor: number; // Monetary value
+  duration: number; // Duration in hours
 }
 
 const Dashboard: React.FC = () => {
@@ -30,15 +35,15 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch Journey data
-        const journeySnapshot = await getDocs(collection(db, "journeys"));
+        // Fetch Journey Data
+        const journeySnapshot = await getDocs(collection(db, "notas"));
         const journeyDocs: Journey[] = journeySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         } as Journey));
         setJourneyData(journeyDocs);
 
-        // Fetch Controle OR data
+        // Fetch Controle OR Data
         const controleOrSnapshot = await getDocs(collection(db, "controleOr"));
         const controleOrDocs: ControleOrData[] = controleOrSnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -55,26 +60,30 @@ const Dashboard: React.FC = () => {
     fetchData();
   }, []);
 
-  // Calcular dados agregados para Journey
-  const totalFarms = new Set(journeyData.map((journey) => journey.farm)).size;
-  const totalDistance = journeyData.reduce((sum, journey) => sum + journey.distance, 0);
+  // Cálculos
+  const totalFarms = new Set(journeyData.map((journey) => journey.fazenda)).size;
+
+  // Total Distance and Average Distance
+  const totalDistance = journeyData.reduce((sum, journey) => sum + (journey.kmFim - journey.kmInicio), 0);
   const averageDistance = journeyData.length > 0 ? (totalDistance / journeyData.length).toFixed(2) : "N/A";
+
+  // Total Trips per Day
   const tripsPerDay = journeyData.reduce((acc, journey) => {
-    const date = new Date(journey.date).toLocaleDateString();
+    const date = new Date(journey.inicioJornada).toLocaleDateString();
     acc[date] = (acc[date] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
+
   const last30Days = Object.entries(tripsPerDay)
     .sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime())
     .slice(-30);
 
-  // Dados para o gráfico
+  // Data for Chart
   const chartData = {
     labels: last30Days.map(([date]) => date),
     datasets: [
       {
         label: "Viagens por dia",
-        width: "150px",
         data: last30Days.map(([_, count]) => count),
         backgroundColor: "rgba(54, 162, 235, 0.6)",
         borderColor: "rgba(54, 162, 235, 1)",
@@ -83,12 +92,13 @@ const Dashboard: React.FC = () => {
     ],
   };
 
-  // Calcular dados agregados para Controle OR
-  const totalValue = controleOrData.reduce((sum, or) => sum + or.value, 0);
-  const averageDuration =
-    controleOrData.length > 0
-      ? (controleOrData.reduce((sum, or) => sum + or.duration, 0) / controleOrData.length).toFixed(2)
-      : "N/A";
+  // Total Value (OR)
+  const totalValue = controleOrData.reduce((sum, or) => sum + or.valor, 0);
+
+  // Average Duration (OR)
+  const averageDuration = controleOrData.length > 0
+    ? (controleOrData.reduce((sum, or) => sum + or.duration, 0) / controleOrData.length).toFixed(2)
+    : "N/A";
 
   return (
     <div className="p-6">
@@ -100,7 +110,7 @@ const Dashboard: React.FC = () => {
       ) : (
         <div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            {/* Cartões para Journey */}
+            {/* Card for Journey */}
             <Card>
               <CardHeader>
                 <CardTitle>
@@ -122,8 +132,11 @@ const Dashboard: React.FC = () => {
                 <p className="text-2xl font-semibold">
                   {journeyData.length > 0
                     ? (
-                        journeyData.reduce((sum, journey) => sum + journey.duration, 0) /
-                        journeyData.length
+                        journeyData.reduce((sum, journey) => {
+                          const start = new Date(journey.inicioJornada).getTime();
+                          const end = new Date(journey.fimJornada).getTime();
+                          return sum + (end - start) / (1000 * 3600); // Convert ms to hours
+                        }, 0) / journeyData.length
                       ).toFixed(2)
                     : "N/A"}{" "}
                   horas
@@ -153,7 +166,7 @@ const Dashboard: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* Cartões para Controle OR */}
+            {/* Card for Controle OR */}
             <Card>
               <CardHeader>
                 <CardTitle>
