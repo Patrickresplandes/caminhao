@@ -3,4 +3,5 @@ export interface MotoristaFormData {
   nome: string;
   dataNascimento: string;
   dataAdmissao: string;
+  senha: string;
 }

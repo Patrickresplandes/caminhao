@@ -28,7 +28,7 @@ export default function RootLayout({
                 <Sidebar />
               </div>
             )}
-            <div className="ml-10 lg:ml-20 w-full">{children}</div>
+            <div className="lg:ml-14 w-full">{children}</div>
           </div>
           
         </body>
