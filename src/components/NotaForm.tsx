@@ -7,6 +7,9 @@ import { getDocs, collection, query, where } from "firebase/firestore";
 import { db } from "../fireBase/index";
 
 const notasCollection = collection(db, "notas");
+interface NotaFormProps {
+  onSubmit: (data: NotaFormData) => void;
+}
 
 const fetchNotasByDate = async (inicio: string, fim: string): Promise<NotaFormData[]> => {
   try {
@@ -25,7 +28,7 @@ const fetchNotasByDate = async (inicio: string, fim: string): Promise<NotaFormDa
   }
 };
 
-const NotaForm: React.FC = () => {
+const NotaForm: React.FC<NotaFormProps> = ({ onSubmit }) => {
   const { control, handleSubmit, formState: { errors } } = useForm<NotaFormData>();
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [inicioFiltro, setInicioFiltro] = useState("");
@@ -66,7 +69,7 @@ const NotaForm: React.FC = () => {
 
     doc.save("relatorio_viagens.pdf");
   };
-
+  
   return (
     <div>
       {/* Botão para abrir formulário */}
@@ -111,7 +114,7 @@ const NotaForm: React.FC = () => {
       </div>
       {/* Formulário */}
       {isFormVisible && (
-        <form  className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="text-left">
               <label htmlFor="motorista" className="block text-sm font-medium">Motorista</label>
