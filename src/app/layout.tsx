@@ -23,14 +23,17 @@ export default function RootLayout({
       <AuthProvider>
         <body className={inter.className}>
           <div className="flex">
-          {!noSidebarRoutes.includes(pathname) && (
+            {!noSidebarRoutes.includes(pathname) && (
               <div className="fixed top-0 left-0 h-screen z-30">
                 <Sidebar />
               </div>
             )}
-            <div className="lg:ml-14 w-full">{children}</div>
+            <div className={`w-full ${noSidebarRoutes.includes(pathname) ? "ml-0" : "lg:ml-14"}`}>
+              {children}
+            </div>
+
           </div>
-          
+
         </body>
       </AuthProvider>
     </html>

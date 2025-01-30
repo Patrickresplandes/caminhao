@@ -1,33 +1,117 @@
-import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { NotaFormData } from '../models/Nota';
+import React, { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import jsPDF from "jspdf";
+import  autoTable from  "jspdf-autotable";
+import { NotaFormData } from "../models/Nota";
+import { getDocs, collection, query, where } from "firebase/firestore";
+import { db } from "../fireBase/index";
 
-interface NotaFormProps {
-  onSubmit: (data: NotaFormData) => void;
-}
+const notasCollection = collection(db, "notas");
 
-const NotaForm: React.FC<NotaFormProps> = ({ onSubmit }) => {
+const fetchNotasByDate = async (inicio: string, fim: string): Promise<NotaFormData[]> => {
+  try {
+    console.log("Buscando notas por período...");
+    const q = query(notasCollection, where("inicioJornada", ">=", inicio), where("fimJornada", "<=", fim));
+    const querySnapshot = await getDocs(q);
+    const notas: NotaFormData[] = [];
+    querySnapshot.forEach((doc) => {
+      notas.push({ id: doc.id, ...doc.data() } as unknown as NotaFormData);
+    });
+    console.log("Notas filtradas:", notas);
+    return notas;
+  } catch (error) {
+    console.error("Erro ao buscar notas:", error);
+    throw new Error("Erro ao carregar notas.");
+  }
+};
+
+const NotaForm: React.FC = () => {
   const { control, handleSubmit, formState: { errors } } = useForm<NotaFormData>();
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [inicioFiltro, setInicioFiltro] = useState("");
+  const [fimFiltro, setFimFiltro] = useState("");
+  const [notasFiltradas, setNotasFiltradas] = useState<NotaFormData[]>([]);
 
   const toggleFormVisibility = () => {
     setIsFormVisible(!isFormVisible);
   };
 
+  const handleFiltrar = async () => {
+    if (!inicioFiltro || !fimFiltro) return alert("Selecione as datas!");
+    const dados = await fetchNotasByDate(inicioFiltro, fimFiltro);
+    setNotasFiltradas(dados);
+  };
+
+  const gerarPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Relatório de Viagens", 20, 10);
+
+    const tableColumn = ["Motorista", "Início", "Fim", "Fazenda", "Placa", "Km Início", "Km Fim", "Abastecimento"];
+    const tableRows = notasFiltradas.map((nota) => [
+      nota.motorista,
+      nota.inicioJornada,
+      nota.fimJornada,
+      nota.fazenda,
+      nota.placa,
+      nota.kmInicio,
+      nota.kmFim,
+      nota.abastecimento,
+    ]);
+
+    autoTable(doc,{
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    });
+
+    doc.save("relatorio_viagens.pdf");
+  };
+
   return (
     <div>
+      {/* Botão para abrir formulário */}
       <div className="flex justify-end mb-4">
         <button
           type="button"
           onClick={toggleFormVisibility}
           className="flex justify-center w-40 py-2 px-4 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800"
         >
-          {isFormVisible ? 'Cancelar' : 'Cadastrar Nota'}
+          {isFormVisible ? "Cancelar" : "Cadastrar Nota"}
         </button>
       </div>
-
+{/* Filtros de Data */}
+<div className="flex justify-between mb-4">
+        <div className="flex space-x-4">
+          <input
+            type="date"
+            value={inicioFiltro}
+            onChange={(e) => setInicioFiltro(e.target.value)}
+            className="p-2 border rounded"
+          />
+          <input
+            type="date"
+            value={fimFiltro}
+            onChange={(e) => setFimFiltro(e.target.value)}
+            className="p-2 border rounded"
+          />
+          <button
+            onClick={handleFiltrar}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Buscar
+          </button>
+        </div>
+        <button
+          onClick={gerarPDF}
+          disabled={notasFiltradas.length === 0}
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:bg-gray-400"
+        >
+          Baixar PDF
+        </button>
+      </div>
+      {/* Formulário */}
       {isFormVisible && (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form  className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="text-left">
               <label htmlFor="motorista" className="block text-sm font-medium">Motorista</label>
@@ -165,10 +249,9 @@ const NotaForm: React.FC<NotaFormProps> = ({ onSubmit }) => {
               {errors.abastecimento && <p className="text-red-600 text-sm">{errors.abastecimento.message}</p>}
             </div>
           </div>
-          
-          <div className='flex justify-end'>
-            <button 
-              type="submit" 
+          <div className="flex justify-end">
+            <button
+              type="submit"
               className="flex justify-center w-24 py-2 px-4 bg-green-700 text-white font-semibold rounded-lg hover:bg-green-800"
             >
               Cadastrar

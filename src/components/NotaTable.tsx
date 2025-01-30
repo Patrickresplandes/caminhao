@@ -32,7 +32,6 @@ const NotaTable: React.FC<NotaTableProps> = ({ notas }) => {
           <TableHead>Motorista</TableHead>
           <TableHead>Início Jornada</TableHead>
           <TableHead>Fazenda</TableHead>
-          <TableHead>Jornada Acumulada</TableHead>
           <TableHead>Fim Jornada</TableHead>
           <TableHead>Placa</TableHead>
           <TableHead>Km Início</TableHead>
