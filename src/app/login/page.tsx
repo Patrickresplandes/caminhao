@@ -5,12 +5,37 @@ import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/fireBase";
+import { auth, db } from "@/fireBase"; // Importe o Firestore (db)
+import { collection, getDocs } from "firebase/firestore"; // Funções do Firestore
 import Cookies from "js-cookie";
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", senha: "" });
   const router = useRouter();
+
+  const fetchEmpresaId = async (email: string): Promise<string> => {
+    try {
+      const usuariosCollection = collection(db, "usuarios");
+
+      const querySnapshot = await getDocs(usuariosCollection);
+
+      let empresaId = "";
+      querySnapshot.forEach((doc) => {
+        if (doc.data().email === email) {
+          empresaId = doc.data().empresa;
+          console.log("EmpresaId encontrado:", empresaId);
+        }
+      });
+
+      if (!empresaId) {
+        throw new Error("Usuário não encontrado na base de dados.");
+      }
+
+      return empresaId;
+    } catch (error: any) {
+      throw new Error("Erro ao buscar empresaId: " + error.message);
+    }
+  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -20,17 +45,26 @@ export default function Login() {
         formData.email,
         formData.senha
       );
-      const token = await userCredential.user.getIdToken(); 
 
-      
+      const token = await userCredential.user.getIdToken();
+
+        
+      const empresaId = await fetchEmpresaId(formData.email);
+     
       Cookies.set("authToken", token, {
         expires: 7, 
         path: "/", 
+      });
+      Cookies.set("empresaId", empresaId, {
+        expires: 7,
+        path: "/",
       });
 
       toast.success("Login realizado com sucesso!");
       router.push("/"); 
     } catch (error: any) {
+      console.error("Erro durante o login:", error);
+
       if (error.code === "auth/user-not-found") {
         toast.error("Usuário não encontrado.");
       } else if (error.code === "auth/wrong-password") {

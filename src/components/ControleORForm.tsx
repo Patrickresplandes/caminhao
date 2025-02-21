@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ControleOrData } from "../models/ControleOr";
 import { db } from "../fireBase/index";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { format, parseISO } from "date-fns"; 
+import { ptBR } from "date-fns/locale"; 
 
 interface ControleORFormProps {
   onSubmit: (data: ControleOrData) => void;
@@ -28,7 +30,8 @@ const ControleORForm: React.FC<ControleORFormProps> = ({ onSubmit }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ qtdViagens, placa, data, fazenda, tempoFabrica, pesoBruto, pesoLiquido, tara, volumem3, valor });
+    const dataFormatada = format(parseISO(data), "dd 'de' MMMM 'de' yyyy", { locale: ptBR }); // Formata a data com a localização pt-BR
+    onSubmit({ qtdViagens, placa, data: dataFormatada, fazenda, tempoFabrica, pesoBruto, pesoLiquido, tara, volumem3, valor });
     setShowForm(false);
   };
 

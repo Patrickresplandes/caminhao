@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ManutencaoFormData } from '@/models/Manutencao';
 import { FaPlus, FaTimes } from 'react-icons/fa';
+import { format, parseISO } from 'date-fns'; 
+import { ptBR } from 'date-fns/locale'; 
 
 interface ManutencaoFormProps {
   onSubmit: (data: ManutencaoFormData) => void;
@@ -17,10 +19,11 @@ const ManutencaoForm: React.FC<ManutencaoFormProps> = ({ onSubmit }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+
     const manutencaoData: ManutencaoFormData = {
       placa,
-      dataEntrada,
-      dataSaida,
+      dataEntrada: format(parseISO(dataEntrada), "dd/MM/yyyy", { locale: ptBR }), 
+      dataSaida: dataSaida ? format(parseISO(dataSaida), "dd/MM/yyyy", { locale: ptBR }) : "", 
       observacao,
       valor,
     };
@@ -30,7 +33,6 @@ const ManutencaoForm: React.FC<ManutencaoFormProps> = ({ onSubmit }) => {
 
   return (
     <div className="space-y-4">
-      {/* Botão para abrir/fechar o formulário */}
       <div className="flex justify-start">
         <button
           onClick={() => setExibirFormulario(!exibirFormulario)}
@@ -41,7 +43,6 @@ const ManutencaoForm: React.FC<ManutencaoFormProps> = ({ onSubmit }) => {
         </button>
       </div>
 
-      {/* Formulário (só aparece se exibirFormulario for true) */}
       {exibirFormulario && (
         <form onSubmit={handleSubmit} className="space-y-4 border p-4 rounded-lg shadow">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

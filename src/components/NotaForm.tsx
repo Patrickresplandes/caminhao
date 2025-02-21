@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import jsPDF from "jspdf";
-import  autoTable from  "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 import { NotaFormData } from "../models/Nota";
 import { getDocs, collection, query, where } from "firebase/firestore";
 import { db } from "../fireBase/index";
+import { format, parseISO } from "date-fns"; 
+import { ptBR } from "date-fns/locale"; 
 
 const notasCollection = collection(db, "notas");
+
 interface NotaFormProps {
   onSubmit: (data: NotaFormData) => void;
 }
@@ -52,8 +55,8 @@ const NotaForm: React.FC<NotaFormProps> = ({ onSubmit }) => {
     const tableColumn = ["Motorista", "Início", "Fim", "Fazenda", "Placa", "Km Início", "Km Fim", "Abastecimento"];
     const tableRows = notasFiltradas.map((nota) => [
       nota.motorista,
-      nota.inicioJornada,
-      nota.fimJornada,
+      format(parseISO(nota.inicioJornada), "dd 'de' MMMM 'de' yyyy", { locale: ptBR }), // Formata a data de início
+      format(parseISO(nota.fimJornada), "dd 'de' MMMM 'de' yyyy", { locale: ptBR }), // Formata a data de fim
       nota.fazenda,
       nota.placa,
       nota.kmInicio,
@@ -61,7 +64,7 @@ const NotaForm: React.FC<NotaFormProps> = ({ onSubmit }) => {
       nota.abastecimento,
     ]);
 
-    autoTable(doc,{
+    autoTable(doc, {
       head: [tableColumn],
       body: tableRows,
       startY: 20,
@@ -69,7 +72,7 @@ const NotaForm: React.FC<NotaFormProps> = ({ onSubmit }) => {
 
     doc.save("relatorio_viagens.pdf");
   };
-  
+
   return (
     <div>
       {/* Botão para abrir formulário */}
@@ -82,8 +85,9 @@ const NotaForm: React.FC<NotaFormProps> = ({ onSubmit }) => {
           {isFormVisible ? "Cancelar" : "Cadastrar Nota"}
         </button>
       </div>
-{/* Filtros de Data */}
-<div className="flex justify-between mb-4">
+
+      {/* Filtros de Data */}
+      <div className="flex justify-between mb-4">
         <div className="flex space-x-4">
           <input
             type="date"
@@ -112,6 +116,7 @@ const NotaForm: React.FC<NotaFormProps> = ({ onSubmit }) => {
           Baixar PDF
         </button>
       </div>
+
       {/* Formulário */}
       {isFormVisible && (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
